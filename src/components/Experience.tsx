@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MainShaderObject from "./MainShaderObject";
 import { Vector2, Vector3 } from "three";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useSpring, animated } from "@react-spring/three";
 
-const Experience = () => {
+type ExperienceProps = {
+  currentSection: string;
+};
+
+const Experience = ({ currentSection }: ExperienceProps) => {
   const [mousePosition, setMousePosition] = useState(new Vector2(0, 0));
   const { camera } = useThree();
+  const cameraTargetRef = useRef(new Vector3(0, 0, 1.9));
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -23,6 +28,29 @@ const Experience = () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
+
+  useEffect(() => {
+    switch (currentSection) {
+      case "about":
+        cameraTargetRef.current.set(-1.32, 0, 1.9);
+        break;
+      case "skills":
+        cameraTargetRef.current.set(1.32, 0, 1.9);
+        break;
+      case "portfolio":
+        cameraTargetRef.current.set(0, 1.32, 1.9);
+        break;
+      case "contact":
+        cameraTargetRef.current.set(0, 0, 1.9);
+        break;
+      default:
+        cameraTargetRef.current.set(0, 0, 1.9);
+    }
+  }, [currentSection]);
+
+  useFrame(() => {
+    camera.position.lerp(cameraTargetRef.current, 0.05);
+  });
 
   const spring = useSpring({
     from: { scale: [0, 0, 0], opacity: 0 },

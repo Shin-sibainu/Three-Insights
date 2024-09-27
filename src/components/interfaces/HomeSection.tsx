@@ -1,10 +1,13 @@
 import { motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
-import { Html } from "@react-three/drei";
 
-const HomeSection = () => {
+type HomeSectionProps = {
+  setCurrentSection: (item: string) => void;
+};
+
+const HomeSection = ({ setCurrentSection }: HomeSectionProps) => {
   const navigationItems = ["About", "Skills", "Portfolio", "Contact"];
-  
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -18,45 +21,48 @@ const HomeSection = () => {
     },
   };
 
-  return (
-    <Html fullscreen>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="text-white ml-32 md:mt-72"
-      >
-        <SectionTitle
-          title="Three InSights"
-          subTitle="Creative Coding for Your Business."
-        />
+  const handleNavigation = (item: string) => {
+    setCurrentSection(item.toLowerCase());
+  };
 
-        <div className="max-w-[30%]">
-          <motion.ul
-            variants={containerVariants}
-            className="grid grid-cols-2 gap-y-4 mt-8"
-          >
-            {navigationItems.map((item, index) => (
-              <motion.li
-                key={index}
-                initial={{ opacity: 0, x: -120 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{
-                  stiffness: 60,
-                  duration: 1.0,
-                  delay: 1.2,
-                }}
-                className="md:text-3xl"
-              >
-                <span className="cursor-pointer text-yellow-100 hover:text-yellow-300 hover:underline underline-offset-2 duration-150 tracking-wider">
-                  {item}
-                </span>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </div>
-      </motion.div>
-    </Html>
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="text-white ml-32 md:mt-72"
+    >
+      <SectionTitle
+        title="Three InSights"
+        subTitle="Creative Coding for Your Business."
+      />
+
+      <div className="max-w-[30%]">
+        <motion.ul
+          variants={containerVariants}
+          className="grid grid-cols-2 gap-y-4 mt-8"
+        >
+          {navigationItems.map((item, index) => (
+            <motion.li
+              key={index}
+              initial={{ opacity: 0, x: -120 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                stiffness: 60,
+                duration: 1.0,
+                delay: 1.2,
+              }}
+              className="md:text-3xl"
+              onClick={() => handleNavigation(item)}
+            >
+              <span className="nav-item cursor-pointer text-yellow-200 duration-150 tracking-wider">
+                {item}
+              </span>
+            </motion.li>
+          ))}
+        </motion.ul>
+      </div>
+    </motion.div>
   );
 };
 
