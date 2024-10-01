@@ -4,9 +4,25 @@ import HomeSection from "./components/interfaces/HomeSection";
 import Header from "./components/interfaces/Header";
 import { Html } from "@react-three/drei";
 import { useState } from "react";
+import SkillsSection from "./components/interfaces/SkillsSection";
 
 function App() {
-  const [currentSection, setCurrentSection] = useState("home");
+  const [currentSection, setCurrentSection] = useState("Home");
+
+  //for section transition
+  const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 1.9 });
+
+  const render2DContent = () => {
+    switch (currentSection) {
+      case "Home":
+        return <HomeSection setCurrentSection={setCurrentSection} />;
+      case "Skills":
+        return <SkillsSection />;
+      // 他のセクションも同様に追加
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="relative w-full h-screen">
@@ -18,22 +34,31 @@ function App() {
         style={{ zIndex: 0 }}
       >
         {/* shader model */}
-        <Experience currentSection={currentSection} />
+        <Experience
+          currentSection={currentSection}
+          setCameraPosition={setCameraPosition}
+        />
 
         {/* HTML overlay */}
-        <Html fullscreen>
+        {/* <Html fullscreen>
           <div className="w-full h-full">
-            {/* header */}
+            {currentSection === "Home" && (
+              <HomeSection setCurrentSection={setCurrentSection} />
+            )}
 
-            {/* home */}
-            <HomeSection setCurrentSection={setCurrentSection} />
-
-            {/* You can add other sections here */}
-            {/* about */}
-            {/* skills */}
+            {currentSection === "Skills" && (
+              <SkillsSection cameraPosition={cameraPosition} />
+            )}
           </div>
-        </Html>
+        </Html> */}
       </Canvas>
+      {/* Fixed 2D Overlay */}
+      <div
+        className="absolute top-0 left-0 w-full h-full pointer-events-none"
+        style={{ zIndex: 1 }}
+      >
+        {render2DContent()}
+      </div>
     </div>
   );
 }

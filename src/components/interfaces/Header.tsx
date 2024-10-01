@@ -5,10 +5,10 @@ type HeaderProps = {
 };
 
 const Header = ({ setCurrentSection }: HeaderProps) => {
-  const navigationItems = ["About", "Skills", "Portfolio", "Contact"];
+  const navigationItems = ["Home", "About", "Skills", "Portfolio", "Home"];
 
   const handleNavigation = (item: string) => {
-    setCurrentSection(item.toLowerCase());
+    setCurrentSection(item);
   };
 
   return (
@@ -19,7 +19,7 @@ const Header = ({ setCurrentSection }: HeaderProps) => {
       className="absolute top-0 left-0 right-0 text-white px-12 py-8 flex justify-between items-center pointer-events-auto z-10"
       style={{ pointerEvents: "auto" }}
     >
-      <div>
+      <div onClick={() => handleNavigation("Home")} className="cursor-pointer">
         <h1 className="md:text-3xl tracking-wide">Three InSights</h1>
       </div>
 

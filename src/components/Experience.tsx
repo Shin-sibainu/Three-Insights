@@ -3,13 +3,15 @@ import MainShaderObject from "./MainShaderObject";
 import { Vector2, Vector3 } from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useSpring, animated } from "@react-spring/three";
+import StarField from "./StarField";
 
 type ExperienceProps = {
   currentSection: string;
+  setCameraPosition: (position: { x: number; y: number; z: number }) => void;
 };
 
-const Experience = ({ currentSection }: ExperienceProps) => {
-  const [mousePosition, setMousePosition] = useState(new Vector2(0, 0));
+const Experience = ({ currentSection, setCameraPosition }: ExperienceProps) => {
+  const [mousePosition, setMousePosition] = useState(new Vector2(1000, 0));
   const { camera } = useThree();
   const cameraTargetRef = useRef(new Vector3(0, 0, 1.9));
 
@@ -31,16 +33,16 @@ const Experience = ({ currentSection }: ExperienceProps) => {
 
   useEffect(() => {
     switch (currentSection) {
-      case "about":
+      case "About":
         cameraTargetRef.current.set(-1.32, 0, 1.9);
         break;
-      case "skills":
+      case "Skills":
         cameraTargetRef.current.set(1.32, 0, 1.9);
         break;
-      case "portfolio":
+      case "Portfolio":
         cameraTargetRef.current.set(0, 1.32, 1.9);
         break;
-      case "contact":
+      case "Contact":
         cameraTargetRef.current.set(0, 0, 1.9);
         break;
       default:
@@ -50,6 +52,12 @@ const Experience = ({ currentSection }: ExperienceProps) => {
 
   useFrame(() => {
     camera.position.lerp(cameraTargetRef.current, 0.05);
+
+    setCameraPosition({
+      x: camera.position.x,
+      y: camera.position.y,
+      z: camera.position.z,
+    });
   });
 
   const spring = useSpring({
@@ -68,6 +76,9 @@ const Experience = ({ currentSection }: ExperienceProps) => {
       {/* light */}
       <ambientLight />
       <pointLight />
+
+      {/* Stars */}
+      <StarField />
 
       {/* shader */}
       <animated.group scale={spring.scale as unknown as Vector3}>
